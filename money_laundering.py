@@ -63,6 +63,26 @@ def get_graph_edges(lines, filtered_by_amount_per_node):
 graph_edge_constructor, filtered_transactions = get_graph_edges(lines, filtered_by_amount_per_node)
 
 
+#def get_nodes_and_edges(filtered_transactions):
+#    '''This function is a helper function which returns the proper edges and weights 
+#    to create a network out of the tansactions. Edges are the transferred amount 
+#    labelled by the transaction ID to prevent the confusion in the case of multiple 
+#    transactions happening on the same day between the same nodes.
+#    '''
+#    nodes_edge_weights_dict, nodes_edge_weights_lst = {}, []
+#    for date, data in filtered_transactions.items():
+#        k, dummy_tple_list = 0, []
+#        while k < len(data):
+#            nodes_edge_weights_dict[(data[k], data[k+2], data[k+3])] = data[k+1]
+#            dummy_tple_list.append((date, data[k+2], data[k+3], (data[k+1], data[k])))
+#            k+=4
+#        nodes_edge_weights_lst.append(dummy_tple_list)
+#
+#    return nodes_edge_weights_dict, nodes_edge_weights_lst
+#
+#nodes_edge_weights_dict, nodes_edge_weights_lst = get_nodes_and_edges(filtered_transactions)
+
+
 def create_graph(edges):
     '''This function returns a multi edged directed graph based on an edge list'''
     G=nx.MultiDiGraph()
@@ -75,6 +95,18 @@ def get_depth(G, node):
     return max(nx.single_source_shortest_path_length(G, node).values())
 
 
+#def breadth_first_search(g, node):
+#    '''This function returns all the connected nodes from a given node with bfs order'''
+#    visited, queue, traversed_edges = [], [node], []
+#    while queue:
+#        vertex = queue.pop(0)
+#        if vertex not in visited:
+#            visited.append(vertex)
+#            queue.extend(list(g.successors(vertex)))
+#            if list(g.edges(vertex)):
+#                traversed_edges += list(g.edges(vertex))
+#    
+#    return visited, traversed_edges
 
 def breadth_first_search(G, node):
     '''This function returns all the connected nodes from a given node with bfs order'''
@@ -265,6 +297,6 @@ def sort_suspicious_transactions(suspicious_transactions, gamma):
     suspicious_transactions_by_line = [transaction for sublist in rank_suspicious_transactions for transaction in sublist]
     return suspicious_transactions_by_line
 
-sorted_suspicious_transactions = sort_suspicious_transactions(suspicious_transactions, gamma_dict)
+suspicious_transactions_by_line = sort_suspicious_transactions(suspicious_transactions, gamma_dict)
 
 sc.stop()
